@@ -52,7 +52,7 @@ export default function PasswordModal({
           <div className="flex w-full items-center justify-around select-none">
             <span className="font-roboto text-sm font-medium text-[#003333]">
               SUCCESS !!
-              <br /> Logging out... Pls login with the new password
+              <br /> Logging out... Pls signin with the new password
             </span>
           </div>,
           {
@@ -137,12 +137,11 @@ export default function PasswordModal({
                   }}
                 />
               </div>
-              <div className="relative mb-3 min-h-17">
+              <div className={`relative ${error ? '' : 'mb-10'}`}>
                 <Input
                   placeholder="Re-enter new password"
                   type="password"
                   className="w-full rounded-none border-b border-gray-700 bg-transparent p-1 shadow-none transition duration-500 focus:shadow-none focus:outline-none"
-                  iconClassName="bottom-10"
                   required
                   minLength={6}
                   value={reNewPassword}
@@ -151,12 +150,12 @@ export default function PasswordModal({
                     setReNewPassword(e.target.value);
                   }}
                 />
-                {error && (
-                  <p className="p-1 text-sm font-medium text-red-600">
-                    {error}
-                  </p>
-                )}
               </div>
+              {error && (
+                <p className="mb-3 p-1 text-sm font-medium text-red-600">
+                  {error}
+                </p>
+              )}
               <div className="text-center">
                 <Button
                   type="submit"

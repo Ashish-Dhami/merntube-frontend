@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/Slices/userSlice';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import SignInSide from './sign-in-side/SignInSide';
 
 export default function Login() {
   const {
@@ -48,37 +49,38 @@ export default function Login() {
   }, [error]);
 
   return (
-    <Container>
-      <BackGround />
-      <form onSubmit={handleSubmit(submit)}>
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box absolute top-1/2 left-1/2 w-xs -translate-1/2 gap-y-3 border p-4">
-          <legend className="fieldset-legend text-lg">Login</legend>
-          <div>
-            <Input
-              placeholder="user123 / example@gmail.com"
-              label="Username / Email"
-              {...register('username')}
-            />
-          </div>
-          <div className="relative">
-            <Input
-              type="password"
-              placeholder="1fr5w#2^d19"
-              label="Password"
-              iconClassName="top-9 text-gray-400 scale-90"
-              {...register('password')}
-            />
-          </div>
+    // <Container>
+    //   <BackGround />
+    //   {/* <form onSubmit={handleSubmit(submit)}>
+    //     <fieldset className="fieldset bg-base-200 border-base-300 rounded-box absolute top-1/2 left-1/2 w-xs -translate-1/2 gap-y-3 border p-4">
+    //       <legend className="fieldset-legend text-lg">Sign In</legend>
+    //       <div>
+    //         <Input
+    //           placeholder="user123 / example@gmail.com"
+    //           label="Username / Email"
+    //           {...register('username')}
+    //         />
+    //       </div>
+    //       <div className="relative">
+    //         <Input
+    //           type="password"
+    //           placeholder="1fr5w#2^d19"
+    //           label="Password"
+    //           // iconClassName="top-9 text-gray-400 scale-90"
+    //           {...register('password')}
+    //         />
+    //       </div>
 
-          <Button className="btn-neutral mt-4" text="Login" type="submit" />
-          <p className="my-2 text-center">
-            Don't have an account?{' '}
-            <Link className="cursor-pointer text-purple-700" to="/signup">
-              Sign Up
-            </Link>
-          </p>
-        </fieldset>
-      </form>
-    </Container>
+    //       <Button className="btn-neutral mt-4" text="Sign In" type="submit" />
+    //       <p className="my-2 text-center">
+    //         Don't have an account?{' '}
+    //         <Link className="cursor-pointer text-purple-700" to="/signup">
+    //           Sign Up
+    //         </Link>
+    //       </p>
+    //     </fieldset>
+    //   </form> */}
+    // </Container>
+    <SignInSide />
   );
 }

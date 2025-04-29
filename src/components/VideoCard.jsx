@@ -198,7 +198,7 @@ export default function VideoCard({
             <div className="relative grow text-sm">
               <p
                 id="video-title"
-                className={`font-medium break-normal whitespace-pre-wrap md:break-all ${layoutChange ? 'md:text-xl' : ''} ${!isPublished && 'text-slate-400'}`}
+                className={`font-roboto text-[1rem] font-medium break-normal whitespace-pre-wrap md:break-all ${layoutChange ? 'md:text-xl' : ''} ${!isPublished && 'text-slate-400'}`}
               >
                 {title}
               </p>
@@ -206,13 +206,13 @@ export default function VideoCard({
                 <p
                   id="channel-name"
                   className="tooltip tooltip-info font-roboto inline-block space-x-1 text-slate-400 hover:text-slate-200"
-                  data-tip={owner.username}
+                  data-tip={owner.fullName}
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/@${owner.username}`);
                   }}
                 >
-                  {owner.username}
+                  {owner.fullName}
                   {layoutChange && (
                     <span className="mx-2 font-extrabold">&#xB7;</span>
                   )}
@@ -264,7 +264,7 @@ export default function VideoCard({
               <HiDotsVertical tabIndex={0} className="text-lg hover:text-xl" />
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box z-1 w-36 bg-[#282828] p-1 shadow-sm"
+                className="dropdown-content menu rounded-box z-1 w-37 bg-[#282828] p-1 shadow-sm"
               >
                 <li className={!isPublished ? 'hidden' : ''}>
                   <a>

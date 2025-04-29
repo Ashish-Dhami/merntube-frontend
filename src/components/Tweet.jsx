@@ -136,7 +136,7 @@ const Tweet = ({ tweet, setIsEditModalOpen, setTweetToEdit, allowCRUD }) => {
               className="mr-2 cursor-pointer text-sm font-medium"
               onClick={() => navigate(`/@${tweet.owner.username}`)}
             >
-              {tweet.owner.username}
+              {tweet.owner.fullName}
             </span>
           }
           subheader={

@@ -4,7 +4,9 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { useMotionTemplate, useMotionValue, motion } from 'motion/react';
 import { useState } from 'react';
-import { FaRegEye, FaRegEyeSlash } from '../../icons';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { IconButton } from '@mui/material';
 
 const Input = React.forwardRef(({ className, type, ...props }, ref) => {
   const radius = 100; // change this to increase the rdaius of the hover effect
@@ -58,18 +60,20 @@ const Input = React.forwardRef(({ className, type, ...props }, ref) => {
         ref={ref}
         {...props}
       />
-      {type === 'password' &&
-        (!showPassword ? (
-          <FaRegEyeSlash
-            className={`absolute right-4 bottom-3 cursor-pointer text-xl hover:scale-105 hover:text-white`}
-            onClick={handleClick}
-          />
-        ) : (
-          <FaRegEye
-            className={`absolute right-4 bottom-3 cursor-pointer text-xl hover:scale-105 hover:text-white`}
-            onClick={handleClick}
-          />
-        ))}
+      {type === 'password' && (
+        <IconButton
+          edge="end"
+          size="small"
+          sx={{ position: 'absolute', right: 10, bottom: 7 }}
+          onClick={handleClick}
+        >
+          {!showPassword ? (
+            <Visibility fontSize="inherit" />
+          ) : (
+            <VisibilityOff fontSize="inherit" />
+          )}
+        </IconButton>
+      )}
     </motion.div>
   );
 });

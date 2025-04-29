@@ -33,6 +33,8 @@ import { BackgroundToggleGroup } from './BackGround';
 import CreateResourceBar from './CreateResourceBar';
 import Tweet from './Tweet';
 import Logo from './Logo';
+import AccountMenu from './AccountMenu';
+import PrivacyPolicy from './PrivacyPolicy';
 
 export {
   Sidebar,
@@ -70,4 +72,6 @@ export {
   CreateResourceBar,
   Tweet,
   Logo,
+  AccountMenu,
+  PrivacyPolicy,
 };

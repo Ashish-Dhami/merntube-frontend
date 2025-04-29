@@ -85,7 +85,7 @@ export default function ProfileDashboard() {
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="glow-text text-4xl font-bold text-white">
-                {userData?.username}
+                {userData?.fullName}
               </h2>
               <p>{userData?.email}</p>
             </div>

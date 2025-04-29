@@ -90,10 +90,10 @@ export default function Description({
           <div>
             <p
               className="tooltip tooltip-info cursor-pointer"
-              data-tip={owner?.username}
+              data-tip={owner?.fullName}
               onClick={() => navigate(`/@${owner?.username}`)}
             >
-              {owner?.username}
+              <span className="font-bold">{owner?.fullName}</span>
             </p>
             <p className="text-sm text-[#aaa]">
               {formatNumber(localSubscribersCount)} subscribers

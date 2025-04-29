@@ -90,7 +90,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'profile',
+        path: 'my-account',
         element: (
           <AuthChecker>
             <ProfileDashboard />
@@ -146,7 +146,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/login',
+    path: '/signin',
     element: <Login />,
   },
   {

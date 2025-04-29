@@ -110,9 +110,7 @@ export default function UserChannelPage() {
           className="h-40 w-40 rounded-full object-cover text-center text-5xl leading-40 outline-1 outline-gray-600"
         />
         <div className="flex grow flex-col items-start gap-y-1">
-          <p className="text-4xl font-bold">
-            {userProfileData?.username?.toUpperCase()}
-          </p>
+          <p className="text-4xl font-bold">{userProfileData?.fullName}</p>
           <p>
             @
             <span className="mr-1 font-medium">

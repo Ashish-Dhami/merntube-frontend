@@ -9,12 +9,12 @@ const LoginPopup = () => {
     <div className="bg-base-200 fixed inset-0 z-50 flex items-center justify-center">
       <BackGround />
       <div className="relative rounded-lg border border-slate-800 bg-black p-5 text-center text-white">
-        <p className="mb-2 text-xl font-medium">Login or Signup to continue</p>
-        <Link to={`/login?redirect=${pathname}`}>
+        <p className="mb-2 text-xl font-medium">Signin to continue</p>
+        <Link to={`/signin?redirect=${pathname}`}>
           <Button
             className="w-full rounded bg-purple-500 px-4 py-2 text-lg font-bold"
             textColor="text-black"
-            text="Login"
+            text="Signin"
           />
         </Link>
         <Link to="/">

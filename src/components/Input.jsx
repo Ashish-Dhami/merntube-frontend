@@ -1,15 +1,10 @@
 import { useId, useState, forwardRef } from 'react';
-import { FaRegEye, FaRegEyeSlash } from '../icons';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { IconButton } from '@mui/material';
 
 function Input(
-  {
-    type = 'text',
-    placeholder = 'Type here',
-    className = '',
-    label,
-    iconClassName = '',
-    ...props
-  },
+  { type = 'text', placeholder = 'Type here', className = '', label, ...props },
   ref
 ) {
   const id = useId();
@@ -50,18 +45,20 @@ function Input(
           {...props}
         />
       )}
-      {type === 'password' &&
-        (!showPassword ? (
-          <FaRegEyeSlash
-            className={`absolute right-4 bottom-3 cursor-pointer text-xl hover:scale-105 hover:text-white ${iconClassName}`}
-            onClick={handleClick}
-          />
-        ) : (
-          <FaRegEye
-            className={`absolute right-4 bottom-3 cursor-pointer text-xl hover:scale-105 hover:text-white ${iconClassName}`}
-            onClick={handleClick}
-          />
-        ))}
+      {type === 'password' && (
+        <IconButton
+          edge="end"
+          size="small"
+          sx={{ position: 'absolute', right: 10, bottom: 7 }}
+          onClick={handleClick}
+        >
+          {!showPassword ? (
+            <Visibility fontSize="inherit" />
+          ) : (
+            <VisibilityOff fontSize="inherit" />
+          )}
+        </IconButton>
+      )}
     </>
   );
 }

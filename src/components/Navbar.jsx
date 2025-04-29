@@ -5,15 +5,15 @@ import {
   CreateResourceBar,
   Input,
   Logo,
+  AccountMenu,
 } from './';
 import { Link, useNavigate } from 'react-router-dom';
-import { logoutUser } from '../store/Slices/userSlice';
 import { ThemeIcon } from '../icons/ThemeIcon';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useForm } from 'react-hook-form';
-import { useRef, useEffect, memo } from 'react';
+import { useRef, memo } from 'react';
 import Theme from '../enums/Theme';
 import { changeTheme } from '../store/Slices/themeSlice';
 
@@ -21,11 +21,7 @@ function Navbar({ setSearchTerm }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.user.authStatus);
-  const userData = useSelector((state) => state.user.userData);
   const currTheme = useSelector((state) => state.theme.value.value);
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', currTheme);
-  }, [currTheme]);
 
   const themes = Object.keys(Theme);
 
@@ -140,59 +136,19 @@ function Navbar({ setSearchTerm }) {
         {authStatus ? (
           <>
             <CreateResourceBar className="-order-1" />
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle avatar tooltip tooltip-bottom"
-                data-tip={userData?.username}
-              >
-                <div className="w-10 rounded-full">
-                  <img
-                    alt={userData.username.charAt(0).toUpperCase()}
-                    src={userData.avatar}
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-              <ul
-                tabIndex={0}
-                className="menu dropdown-content bg-base-200 text-base-content rounded-box z-1 mt-3 w-35 border border-white/5 p-2 font-medium shadow-2xl outline-1 outline-black/5"
-              >
-                <li>
-                  <a
-                    onClick={() => {
-                      document.activeElement.blur();
-                      navigate('/profile');
-                    }}
-                  >
-                    Profile
-                  </a>
-                </li>
-                <li>
-                  <a
-                    onClick={() => {
-                      document.activeElement.blur();
-                      dispatch(logoutUser());
-                    }}
-                  >
-                    Logout
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <AccountMenu />
           </>
         ) : (
           <>
             <Button
-              text="LOGIN"
+              text="SIGN IN"
               clickHandler={() => {
-                navigate('/login');
+                navigate('/signin');
               }}
               aceternity={true}
             />
             <Button
-              text="SIGNUP"
+              text="SIGN UP"
               clickHandler={() => {
                 navigate('/signup');
               }}

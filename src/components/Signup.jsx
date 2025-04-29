@@ -2,14 +2,22 @@
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
-import { Container, BackGround, Logo } from './';
+import { Container, BackGround, Logo, PrivacyPolicy } from './';
 import { FileUpload } from './ui/file-upload';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../store/Slices/userSlice';
 import { useForm } from 'react-hook-form';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LinearProgress, CircularProgress } from '@mui/material';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  LinearProgress,
+  CircularProgress,
+  Link,
+  FormControlLabel,
+  Checkbox,
+  Typography,
+} from '@mui/material';
+import EastIcon from '@mui/icons-material/East';
 
 export default function Signup() {
   const dispatch = useDispatch();
@@ -17,6 +25,7 @@ export default function Signup() {
     register,
     handleSubmit,
     setValue,
+    watch,
     reset,
     trigger,
     formState: { errors },
@@ -28,12 +37,13 @@ export default function Signup() {
       email: '',
       username: '',
       password: '',
+      policy: false,
     },
   });
 
   const navigate = useNavigate();
   const timeoutRef = useRef(null);
-  const { loading } = useSelector((state) => state.user);
+  const { loading, authStatus } = useSelector((state) => state.user);
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -46,17 +56,13 @@ export default function Signup() {
 
     dispatch(registerUser({ ...formData, fullName }))
       .then((res) => {
-        console.log(res);
-
         if (res.type === 'register/fulfilled') {
           reset();
           setFiles([]);
+          timeoutRef.current = setTimeout(() => navigate('/signin'), 2000);
         }
       })
-      .catch((err) => console.error(err))
-      .finally(
-        () => (timeoutRef.current = setTimeout(() => navigate('/login'), 2000))
-      );
+      .catch((err) => console.error(err));
   };
 
   const validateAvatar = (file) => {
@@ -78,10 +84,34 @@ export default function Signup() {
   });
 
   useEffect(() => {
+    if (authStatus) {
+      navigate('/');
+    }
     return () => clearTimeout(timeoutRef.current);
   }, []);
 
   const [files, setFiles] = useState([]);
+
+  const [open, setOpen] = useState(false);
+  const policyChecked = watch('policy');
+
+  const handleCheckboxClick = () => {
+    if (!policyChecked) {
+      setOpen(true);
+    } else {
+      setValue('policy', false, { shouldValidate: true });
+    }
+  };
+
+  const handleAccept = () => {
+    setValue('policy', true, { shouldValidate: true });
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setValue('policy', false, { shouldValidate: true });
+    setOpen(false);
+  };
 
   return (
     <Container>
@@ -101,7 +131,9 @@ export default function Signup() {
       <BackGround />
       <div className="relative flex flex-1 overflow-y-auto py-8">
         <div className="shadow-input m-auto w-full max-w-md rounded-none bg-black p-4 md:rounded-2xl md:p-8">
-          <Logo className="mx-auto h-12 w-12" />
+          <NavLink to="/">
+            <Logo className="mx-auto h-12 w-12 transition-[scale] duration-300 ease-in hover:scale-110" />
+          </NavLink>
           <h2 className="font-roboto mt-2 text-2xl font-bold text-neutral-200">
             Welcome to MERN
             <span className="font-roboto text-xl leading-6.5 text-[#ff0033]">
@@ -268,7 +300,7 @@ export default function Signup() {
                 <ErrorMessage message={errors.username.message} />
               )}
             </LabelInputContainer>
-            <LabelInputContainer className="mb-8">
+            <LabelInputContainer className="mb-6">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -306,20 +338,61 @@ export default function Signup() {
                 <ErrorMessage message={errors.password.message} />
               )}
             </LabelInputContainer>
-
+            <LabelInputContainer className="mb-6">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    size="small"
+                    color="primary"
+                    checked={policyChecked}
+                    onClick={handleCheckboxClick}
+                    {...register('policy', { required: 'Required *' })}
+                  />
+                }
+                disabled={loading}
+                label={
+                  <Typography variant="body2" sx={{ userSelect: 'none' }}>
+                    I agree to the terms of use and privacy policy.
+                  </Typography>
+                }
+              />
+              {errors.policy && (
+                <ErrorMessage
+                  message={errors.policy.message}
+                  className="-mt-2.5"
+                />
+              )}
+              <PrivacyPolicy
+                open={open}
+                handleCancel={handleCancel}
+                handleAccept={handleAccept}
+              />
+            </LabelInputContainer>
             <button
-              className="group/btn relative inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-zinc-800 from-zinc-900 to-zinc-900 font-medium text-white shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] disabled:cursor-not-allowed"
+              className="group/btn relative mb-3 inline-flex h-10 w-full cursor-pointer items-center justify-center gap-x-1 rounded-md bg-zinc-800 from-zinc-900 to-zinc-900 font-medium text-white shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] disabled:cursor-not-allowed"
               type="submit"
               disabled={loading}
             >
               {loading ? (
                 <CircularProgress size={25} color="info" />
               ) : (
-                <>Sign up &rarr;</>
+                <>
+                  Sign Up <EastIcon fontSize="small" />
+                </>
               )}
               <BottomGradient />
             </button>
-
+            <p className="pr-1 text-right">
+              <Link
+                component="button"
+                underline="hover"
+                variant="subtitle2"
+                color="info"
+                onClick={() => navigate('/signin')}
+              >
+                Already have an account? Sign in
+              </Link>
+            </p>
             <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-700 to-transparent" />
           </form>
         </div>
