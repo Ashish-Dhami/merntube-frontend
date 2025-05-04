@@ -132,7 +132,7 @@ export default function Signup() {
       <div className="relative flex flex-1 overflow-y-auto py-8">
         <div className="shadow-input m-auto w-full max-w-md rounded-none bg-black p-4 md:rounded-2xl md:p-8">
           <NavLink to="/">
-            <Logo className="mx-auto h-12 w-12 transition-[scale] duration-300 ease-in hover:scale-110" />
+            <Logo className="mx-auto h-12 w-12 transition-[scale] duration-200 ease-in hover:scale-110" />
           </NavLink>
           <h2 className="font-roboto mt-2 text-2xl font-bold text-neutral-200">
             Welcome to MERN

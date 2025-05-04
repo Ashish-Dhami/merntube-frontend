@@ -24,8 +24,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { GoogleIcon, FacebookIcon } from './CustomIcons';
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -36,6 +36,8 @@ import {
 } from '../../../store/Slices/userSlice';
 import { useMaskedEmail } from '../../../hooks/useMaskedEmail';
 import { toast } from 'react-toastify';
+import { SigninSkeleton } from '../../../skeletons';
+import { Logo } from '../../';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -65,6 +67,7 @@ export default function SignInCard() {
   const redirectURL = searchParams.get('redirect');
   const [savedUser, setSavedUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [showSkeleton, setShowSkeleton] = useState(false);
 
   const {
     register,
@@ -106,11 +109,14 @@ export default function SignInCard() {
   };
 
   useEffect(() => {
-    dispatch(getSavedUser()).then((res) => {
-      if (res.type === 'getSavedUser/fulfilled') {
-        setSavedUser(res.payload);
-      } else setFocus('identifier');
-    });
+    setShowSkeleton(true);
+    dispatch(getSavedUser())
+      .then((res) => {
+        if (res.type === 'getSavedUser/fulfilled') {
+          setSavedUser(res.payload);
+        } else setFocus('identifier');
+      })
+      .finally(() => setShowSkeleton(false));
   }, [dispatch]);
 
   const handleSavedLogin = () => {
@@ -138,296 +144,335 @@ export default function SignInCard() {
 
   return (
     <Card variant="outlined">
-      <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-        <SitemarkIcon />
-      </Box>
-      <Typography
-        component="h1"
-        variant="h4"
-        sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+      <Box
+        sx={{
+          display: { xs: 'flex', md: 'none' },
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          columnGap: '4px',
+          marginBottom: '12px',
+        }}
       >
-        {savedUser ? 'Welcome Back' : 'Sign in'}
-      </Typography>
-      {savedUser ? (
-        <>
-          <Box
-            sx={{
-              border: '1px solid #e0e0e0',
-              borderRadius: 1,
-              overflow: 'hidden',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              transition: 'all 250ms ease-in',
-              '&:hover': {
-                transform: 'scale(1.02)',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(8px)',
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-              },
-            }}
+        <NavLink to="/">
+          <Logo className="mx-auto transition-[scale] duration-200 ease-in hover:scale-110" />
+        </NavLink>
+        <NavLink to="/">
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 'bold', color: '#e5e7eb' }}
           >
-            {/* User Row - Click to sign in */}
-            <ButtonBase
-              onClick={handleSavedLogin}
-              // disabled={loading}
-              sx={{ width: '100%', textAlign: 'inherit' }}
+            MERN
+            <Box
+              component="span"
+              sx={{
+                fontSize: '1.25rem',
+                lineHeight: '1.625rem',
+                color: '#ff0033',
+              }}
             >
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  p: 2,
-                  width: '100%',
-                }}
-              >
-                <Avatar
-                  src={savedUser.avatar}
-                  alt={savedUser.fullName}
-                  sx={{ width: 44, height: 44, mr: 2 }}
-                />
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2">
-                    {savedUser.fullName}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {useMaskedEmail(savedUser.email)}
-                  </Typography>
-                </Box>
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAnchorEl(e.currentTarget);
-                  }}
-                  disabled={loading}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              </Box>
-            </ButtonBase>
-            {/* Dropdown Menu */}
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <MenuItem onClick={handleForgetMe} disabled={loading}>
-                Forget this account
-              </MenuItem>
-            </Menu>
-          </Box>
-          <Typography sx={{ textAlign: 'center' }}>
-            Don&apos;t have an account?{' '}
-            <span>
-              <Link
-                onClick={() => navigate('/signup')}
-                variant="body2"
-                sx={{
-                  alignSelf: 'center',
-                  cursor: 'pointer',
-                  color: !loading ? 'cornflowerblue' : 'dimgray',
-                  pointerEvents: !loading ? 'auto' : 'none',
-                }}
-              >
-                Sign up
-              </Link>
-            </span>
+              Tube
+            </Box>
           </Typography>
-        </>
+        </NavLink>
+      </Box>
+      {showSkeleton ? (
+        <SigninSkeleton />
       ) : (
         <>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(submit)}
-            noValidate
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              gap: 2,
-            }}
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            <FormControl>
-              <FormLabel htmlFor="identifier">Username / Email</FormLabel>
-              <TextField
-                error={errors.identifier}
-                helperText={errors.identifier?.message}
-                id="identifier"
-                type="text"
-                placeholder="tylerdurden12 / your@email.com"
-                autoComplete="username email"
-                autoFocus
-                fullWidth
-                variant="outlined"
-                color={errors.identifier ? 'error' : 'primary'}
-                disabled={loading}
-                {...register('identifier', {
-                  required: 'Username or Email is required',
-                  pattern: {
-                    value:
-                      /^(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[a-zA-Z0-9_]{3,})$/,
-                    message: 'Invalid username or email address',
+            {savedUser ? 'Welcome Back' : 'Sign in'}
+          </Typography>
+          {savedUser ? (
+            <>
+              <Box
+                sx={{
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 1,
+                  overflow: 'hidden',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  transition: 'all 250ms ease-in',
+                  '&:hover': {
+                    transform: 'scale(1.02)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(8px)',
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
                   },
-                  maxLength: {
-                    value: 100,
-                    message: 'Input cannot exceed 100 characters',
-                  },
-                  validate: (value) => {
-                    const trimmedValue = value.trim();
-                    if (trimmedValue.length === 0)
-                      return 'Username or Email is required';
-                    setValue('identifier', trimmedValue, {
-                      shouldValidate: false,
-                    });
-                    // Additional username-specific validation
-                    if (!/@/.test(trimmedValue)) {
-                      // Apply username rules if not an email
-                      if (trimmedValue.length < 3)
-                        return 'Username must be at least 3 characters';
-                      if (trimmedValue.length > 20)
-                        return 'Username cannot exceed 20 characters';
-                      if (!/^[a-zA-Z0-9_]+$/.test(trimmedValue))
-                        return 'Username can only contain letters, numbers, and underscores';
-                    }
-                    return true;
-                  },
-                })}
-              />
-            </FormControl>
-            <FormControl>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Link
-                  component="button"
-                  type="button"
-                  onClick={handleClickOpen}
-                  disabled={loading}
-                  variant="body2"
-                  sx={{
-                    alignSelf: 'baseline',
-                    color: 'cornflowerblue',
-                    ':disabled': { color: 'dimgray', pointerEvents: 'none' },
-                  }}
-                >
-                  Forgot your password?
-                </Link>
-              </Box>
-              <TextField
-                error={errors.password}
-                helperText={errors.password?.message}
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                fullWidth
-                variant="outlined"
-                color={errors.password ? 'error' : 'primary'}
-                disabled={loading}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                        size="small"
-                      >
-                        {showPassword ? (
-                          <VisibilityOff fontSize="inherit" />
-                        ) : (
-                          <Visibility fontSize="inherit" />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
                 }}
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: {
-                    value: 8,
-                    message: 'Password must be at least 8 characters',
-                  },
-                  maxLength: {
-                    value: 50,
-                    message: 'Password cannot exceed 50 characters',
-                  },
-                  validate: (value) => {
-                    const trimmedValue = value.trim();
-                    if (trimmedValue.length === 0)
-                      return 'Password is required';
-                    setValue('password', trimmedValue, {
-                      shouldValidate: false,
-                    });
-                    return true;
-                  },
-                })}
-              />
-            </FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={watch('rememberMe')}
-                  {...register('rememberMe')}
-                />
-              }
-              label="Remember me"
-              disabled={loading}
-            />
-            <ForgotPassword open={open} handleClose={handleClose} />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={loading}
-            >
-              {loading && (
-                <CircularProgress
-                  size={24}
-                  color="info"
-                  sx={{ position: 'absolute' }}
-                />
-              )}
-              Sign in
-            </Button>
-            <Typography sx={{ textAlign: 'center' }}>
-              Don&apos;t have an account?{' '}
-              <span>
-                <Link
-                  onClick={() => navigate('/signup')}
-                  variant="body2"
-                  sx={{
-                    alignSelf: 'center',
-                    cursor: 'pointer',
-                    color: !loading ? 'cornflowerblue' : 'dimgray',
-                    pointerEvents: !loading ? 'auto' : 'none',
-                  }}
+              >
+                {/* User Row - Click to sign in */}
+                <ButtonBase
+                  onClick={handleSavedLogin}
+                  // disabled={loading}
+                  sx={{ width: '100%', textAlign: 'inherit' }}
                 >
-                  Sign up
-                </Link>
-              </span>
-            </Typography>
-          </Box>
-          <Divider>or</Divider>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              disabled={loading}
-              onClick={() => alert('Feature will be implemented soon')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              disabled={loading}
-              onClick={() => alert('Feature will be implemented soon')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
-          </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      p: 2,
+                      width: '100%',
+                    }}
+                  >
+                    <Avatar
+                      src={savedUser.avatar}
+                      alt={savedUser.fullName}
+                      sx={{ width: 44, height: 44, mr: 2 }}
+                    />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2">
+                        {savedUser.fullName}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {useMaskedEmail(savedUser.email)}
+                      </Typography>
+                    </Box>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAnchorEl(e.currentTarget);
+                      }}
+                      disabled={loading}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Box>
+                </ButtonBase>
+                {/* Dropdown Menu */}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={() => setAnchorEl(null)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem onClick={handleForgetMe} disabled={loading}>
+                    Forget this account
+                  </MenuItem>
+                </Menu>
+              </Box>
+              <Typography sx={{ textAlign: 'center' }}>
+                Don&apos;t have an account?{' '}
+                <span>
+                  <Link
+                    onClick={() => navigate('/signup')}
+                    variant="body2"
+                    sx={{
+                      alignSelf: 'center',
+                      cursor: 'pointer',
+                      color: !loading ? 'cornflowerblue' : 'dimgray',
+                      pointerEvents: !loading ? 'auto' : 'none',
+                    }}
+                  >
+                    Sign up
+                  </Link>
+                </span>
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Box
+                component="form"
+                onSubmit={handleSubmit(submit)}
+                noValidate
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                  gap: 2,
+                }}
+              >
+                <FormControl>
+                  <FormLabel htmlFor="identifier">Username / Email</FormLabel>
+                  <TextField
+                    error={errors.identifier}
+                    helperText={errors.identifier?.message}
+                    id="identifier"
+                    type="text"
+                    placeholder="tylerdurden12 / your@email.com"
+                    autoComplete="username email"
+                    autoFocus
+                    fullWidth
+                    variant="outlined"
+                    color={errors.identifier ? 'error' : 'primary'}
+                    disabled={loading}
+                    {...register('identifier', {
+                      required: 'Username or Email is required',
+                      pattern: {
+                        value:
+                          /^(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|[a-zA-Z0-9_]{3,})$/,
+                        message: 'Invalid username or email address',
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: 'Input cannot exceed 100 characters',
+                      },
+                      validate: (value) => {
+                        const trimmedValue = value.trim();
+                        if (trimmedValue.length === 0)
+                          return 'Username or Email is required';
+                        setValue('identifier', trimmedValue, {
+                          shouldValidate: false,
+                        });
+                        // Additional username-specific validation
+                        if (!/@/.test(trimmedValue)) {
+                          // Apply username rules if not an email
+                          if (trimmedValue.length < 3)
+                            return 'Username must be at least 3 characters';
+                          if (trimmedValue.length > 20)
+                            return 'Username cannot exceed 20 characters';
+                          if (!/^[a-zA-Z0-9_]+$/.test(trimmedValue))
+                            return 'Username can only contain letters, numbers, and underscores';
+                        }
+                        return true;
+                      },
+                    })}
+                  />
+                </FormControl>
+                <FormControl>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <Link
+                      component="button"
+                      type="button"
+                      onClick={handleClickOpen}
+                      disabled={loading}
+                      variant="body2"
+                      sx={{
+                        alignSelf: 'baseline',
+                        color: 'cornflowerblue',
+                        ':disabled': {
+                          color: 'dimgray',
+                          pointerEvents: 'none',
+                        },
+                      }}
+                    >
+                      Forgot your password?
+                    </Link>
+                  </Box>
+                  <TextField
+                    error={errors.password}
+                    helperText={errors.password?.message}
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    fullWidth
+                    variant="outlined"
+                    color={errors.password ? 'error' : 'primary'}
+                    disabled={loading}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={handleClickShowPassword}
+                            edge="end"
+                            size="small"
+                          >
+                            {showPassword ? (
+                              <VisibilityOff fontSize="inherit" />
+                            ) : (
+                              <Visibility fontSize="inherit" />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    {...register('password', {
+                      required: 'Password is required',
+                      minLength: {
+                        value: 8,
+                        message: 'Password must be at least 8 characters',
+                      },
+                      maxLength: {
+                        value: 50,
+                        message: 'Password cannot exceed 50 characters',
+                      },
+                      validate: (value) => {
+                        const trimmedValue = value.trim();
+                        if (trimmedValue.length === 0)
+                          return 'Password is required';
+                        setValue('password', trimmedValue, {
+                          shouldValidate: false,
+                        });
+                        return true;
+                      },
+                    })}
+                  />
+                </FormControl>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={watch('rememberMe')}
+                      {...register('rememberMe')}
+                    />
+                  }
+                  label="Remember me"
+                  disabled={loading}
+                />
+                <ForgotPassword open={open} handleClose={handleClose} />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={loading}
+                >
+                  {loading && (
+                    <CircularProgress
+                      size={24}
+                      color="info"
+                      sx={{ position: 'absolute' }}
+                    />
+                  )}
+                  Sign in
+                </Button>
+                <Typography sx={{ textAlign: 'center' }}>
+                  Don&apos;t have an account?{' '}
+                  <span>
+                    <Link
+                      onClick={() => navigate('/signup')}
+                      variant="body2"
+                      sx={{
+                        alignSelf: 'center',
+                        cursor: 'pointer',
+                        color: !loading ? 'cornflowerblue' : 'dimgray',
+                        pointerEvents: !loading ? 'auto' : 'none',
+                      }}
+                    >
+                      Sign up
+                    </Link>
+                  </span>
+                </Typography>
+              </Box>
+              <Divider>or</Divider>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  disabled={loading}
+                  onClick={() => alert('Feature will be implemented soon')}
+                  startIcon={<GoogleIcon />}
+                >
+                  Sign in with Google
+                </Button>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  disabled={loading}
+                  onClick={() => alert('Feature will be implemented soon')}
+                  startIcon={<FacebookIcon />}
+                >
+                  Sign in with Facebook
+                </Button>
+              </Box>
+            </>
+          )}
         </>
       )}
     </Card>

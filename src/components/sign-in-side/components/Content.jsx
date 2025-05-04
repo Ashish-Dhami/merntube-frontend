@@ -6,7 +6,8 @@ import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
 import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
-import { SitemarkIcon } from './CustomIcons';
+import { NavLink } from 'react-router-dom';
+import { Logo } from '../../';
 
 const items = [
   {
@@ -38,10 +39,43 @@ const items = [
 export default function Content() {
   return (
     <Stack
-      sx={{ flexDirection: 'column', alignSelf: 'center', gap: 4, maxWidth: 450 }}
+      sx={{
+        flexDirection: 'column',
+        alignSelf: 'center',
+        gap: 4,
+        maxWidth: 450,
+      }}
     >
-      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-        <SitemarkIcon />
+      <Box
+        sx={{
+          display: { xs: 'none', md: 'flex' },
+          alignItems: 'flex-end',
+          // justifyContent: 'center',
+          columnGap: '4px',
+          marginBottom: '12px',
+        }}
+      >
+        <NavLink to="/">
+          <Logo className="mx-auto transition-[scale] duration-200 ease-in hover:scale-110" />
+        </NavLink>
+        <NavLink to="/">
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 'bold', color: '#e5e7eb' }}
+          >
+            MERN
+            <Box
+              component="span"
+              sx={{
+                fontSize: '1.25rem',
+                lineHeight: '1.625rem',
+                color: '#ff0033',
+              }}
+            >
+              Tube
+            </Box>
+          </Typography>
+        </NavLink>
       </Box>
       {items.map((item, index) => (
         <Stack key={index} direction="row" sx={{ gap: 2 }}>

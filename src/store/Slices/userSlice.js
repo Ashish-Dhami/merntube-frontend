@@ -166,7 +166,7 @@ export const getSavedUser = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const result = await axiosInstance.get('/users/get-saved-user');
-      return result?.data?.data;
+      return useDelay(result, 500, false);
     } catch (err) {
       return thunkAPI.rejectWithValue(err?.response?.data?.message);
     }
