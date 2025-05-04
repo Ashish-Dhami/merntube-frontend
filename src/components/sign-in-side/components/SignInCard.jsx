@@ -72,6 +72,7 @@ export default function SignInCard() {
     setValue,
     watch,
     reset,
+    setFocus,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -108,7 +109,7 @@ export default function SignInCard() {
     dispatch(getSavedUser()).then((res) => {
       if (res.type === 'getSavedUser/fulfilled') {
         setSavedUser(res.payload);
-      }
+      } else setFocus('identifier');
     });
   }, [dispatch]);
 
