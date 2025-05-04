@@ -346,12 +346,15 @@ export default function Signup() {
                     color="primary"
                     checked={policyChecked}
                     onClick={handleCheckboxClick}
-                    {...register('policy', { required: 'Required *' })}
+                    {...register('policy', { required: 'Required*' })}
                   />
                 }
                 disabled={loading}
                 label={
-                  <Typography variant="body2" sx={{ userSelect: 'none' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ userSelect: 'none', lineHeight: 1.5 }}
+                  >
                     I agree to the terms of use and privacy policy.
                   </Typography>
                 }
@@ -385,10 +388,13 @@ export default function Signup() {
             <p className="pr-1 text-right">
               <Link
                 component="button"
+                type="button"
                 underline="hover"
                 variant="subtitle2"
-                color="info"
+                color={loading ? 'textDisabled' : 'info'}
                 onClick={() => navigate('/signin')}
+                disabled={loading}
+                sx={{ ':disabled': { pointerEvents: 'none' } }}
               >
                 Already have an account? Sign in
               </Link>

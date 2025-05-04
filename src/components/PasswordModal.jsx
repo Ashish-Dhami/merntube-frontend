@@ -2,8 +2,13 @@ import { useState, useEffect } from 'react';
 import { Loader, Input, Button } from './';
 import { IoCloseOutline, CiWarning } from '../icons';
 import { useDispatch } from 'react-redux';
-import { changePassword, logoutUser } from '../store/Slices/userSlice';
+import {
+  changePassword,
+  forgetMe,
+  logoutUser,
+} from '../store/Slices/userSlice';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function PasswordModal({
   isOpen,
@@ -17,8 +22,9 @@ export default function PasswordModal({
   const [animateLoading, setAnimateLoading] = useState(true);
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [reNewPassword, setReNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -38,12 +44,12 @@ export default function PasswordModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (currPassword === newPassword) {
-      setError('New password cannot be same as current password');
+    if (newPassword !== confirmNewPassword) {
+      setError('Passwords do not match');
       return;
     }
-    if (newPassword !== reNewPassword) {
-      setError('Passwords do not match');
+    if (currPassword === newPassword) {
+      setError('New password cannot be same as current password');
       return;
     }
     dispatch(changePassword({ currPassword, newPassword })).then((res) => {
@@ -58,7 +64,7 @@ export default function PasswordModal({
           {
             theme: 'light',
             position: 'top-center',
-            autoClose: 6000,
+            autoClose: 4000,
             hideProgressBar: false,
             pauseOnHover: false,
             draggable: false,
@@ -69,7 +75,10 @@ export default function PasswordModal({
               minHeight: '55px',
             },
             onClose: () => {
-              dispatch(logoutUser());
+              dispatch(logoutUser()).then(() => {
+                dispatch(forgetMe());
+                navigate('/signin');
+              });
             },
           }
         );
@@ -111,11 +120,11 @@ export default function PasswordModal({
               </p>
               <div className="relative mb-4">
                 <Input
-                  placeholder="Enter current password"
+                  placeholder="Current Password"
                   type="password"
                   className="w-full rounded-none border-b border-gray-700 bg-transparent p-1 shadow-none transition duration-500 focus:shadow-none focus:outline-none"
                   required
-                  minLength={6}
+                  minLength={8}
                   value={currPassword}
                   onChange={(e) => {
                     setError(null);
@@ -125,11 +134,11 @@ export default function PasswordModal({
               </div>
               <div className="relative mb-4">
                 <Input
-                  placeholder="Enter new password"
+                  placeholder="New Password"
                   type="password"
                   className="w-full rounded-none border-b border-gray-700 bg-transparent p-1 shadow-none transition duration-500 focus:shadow-none focus:outline-none"
                   required
-                  minLength={6}
+                  minLength={8}
                   value={newPassword}
                   onChange={(e) => {
                     setError(null);
@@ -139,15 +148,15 @@ export default function PasswordModal({
               </div>
               <div className={`relative ${error ? '' : 'mb-10'}`}>
                 <Input
-                  placeholder="Re-enter new password"
+                  placeholder="Confirm New Password"
                   type="password"
                   className="w-full rounded-none border-b border-gray-700 bg-transparent p-1 shadow-none transition duration-500 focus:shadow-none focus:outline-none"
                   required
-                  minLength={6}
-                  value={reNewPassword}
+                  minLength={8}
+                  value={confirmNewPassword}
                   onChange={(e) => {
                     setError(null);
-                    setReNewPassword(e.target.value);
+                    setConfirmNewPassword(e.target.value);
                   }}
                 />
               </div>

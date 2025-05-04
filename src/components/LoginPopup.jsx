@@ -13,8 +13,7 @@ const LoginPopup = () => {
         <Link to={`/signin?redirect=${pathname}`}>
           <Button
             className="w-full rounded bg-purple-500 px-4 py-2 text-lg font-bold"
-            textColor="text-black"
-            text="Signin"
+            text="Sign in"
           />
         </Link>
         <Link to="/">

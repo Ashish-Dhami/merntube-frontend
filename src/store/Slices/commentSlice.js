@@ -34,7 +34,7 @@ export const getVideoComments = createAsyncThunk(
       const response = await axiosInstance.get(`/comments/${videoId}`, {
         params,
       });
-      return useDelay(response);
+      return useDelay(response, 900, false);
     } catch (e) {
       toast.error(e?.response?.data?.message);
       return thunkAPI.rejectWithValue(e?.response?.data?.message);

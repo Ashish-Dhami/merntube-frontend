@@ -34,8 +34,7 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk('login', async (data, thunkAPI) => {
   try {
     const result = await axiosInstance.post('/users/login', data);
-    toast.success(result?.data?.message || 'login successful');
-    return result?.data?.data?.user;
+    return useDelay(result);
   } catch (err) {
     toast.error(
       err?.response?.data?.message || 'error occurred while logging in'
@@ -60,9 +59,8 @@ export const refreshAccessToken = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const result = await axiosInstance.post('/users/refreshAccessToken');
-      return result?.data;
+      return useDelay(result, 900, false);
     } catch (err) {
-      toast.error(err?.response?.data?.message);
       return thunkAPI.rejectWithValue(err?.response?.data?.message);
     }
   }
@@ -163,6 +161,27 @@ export const getWatchHistory = createAsyncThunk(
   }
 );
 
+export const getSavedUser = createAsyncThunk(
+  'getSavedUser',
+  async (_, thunkAPI) => {
+    try {
+      const result = await axiosInstance.get('/users/get-saved-user');
+      return result?.data?.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err?.response?.data?.message);
+    }
+  }
+);
+export const forgetMe = createAsyncThunk('forgetMe', async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.post('/users/forget-me');
+    // toast.success(response?.data?.message);
+    return useDelay(response, 900, false);
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err?.response?.data?.message);
+  }
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -189,7 +208,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.authStatus = true;
-        state.userData = action.payload;
+        state.userData = action.payload.user;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -223,6 +242,30 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(forgetMe.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgetMe.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(forgetMe.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getSavedUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSavedUser.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getSavedUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -298,6 +341,22 @@ const userSlice = createSlice({
       .addCase(getWatchHistory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(refreshAccessToken.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(refreshAccessToken.fulfilled, (state, action) => {
+        state.userData = action.payload.userResponse;
+        state.authStatus = true;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(refreshAccessToken.rejected, (state, action) => {
+        state.loading = false;
+        state.userData = null;
+        state.authStatus = false;
+        state.error = action.payload || 'Failed to refresh token';
       });
   },
 });

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../store/Slices/userSlice';
 
@@ -73,12 +73,17 @@ function AccountMenu() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
+  const { pathname } = useLocation();
   const handleSignOut = () => {
-    dispatch(logoutUser());
+    dispatch(logoutUser()).then(() => {
+      if (pathname !== '/') navigate(`/signin?redirect=${pathname}`);
+      else navigate('/signin');
+    });
   };
 
   return (
