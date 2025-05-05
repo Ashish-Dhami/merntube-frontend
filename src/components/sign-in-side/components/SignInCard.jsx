@@ -104,7 +104,7 @@ export default function SignInCard() {
       if (res.type === 'login/fulfilled') {
         reset();
         navigate(redirectURL || '/', { replace: true });
-      }
+      } else setFocus('password');
     });
   };
 
