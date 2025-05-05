@@ -36,21 +36,50 @@ const items = [
   },
 ];
 
-export default function Content() {
+export default function ScrollingContent() {
+  const [isPaused, setIsPaused] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const stackRef = React.useRef(null);
+  const lastTimeRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const stack = stackRef.current;
+    if (!stack) return;
+
+    let animationFrame;
+    const duration = 20000; // 20 seconds for full scroll
+
+    const animate = (time) => {
+      if (isPaused) {
+        lastTimeRef.current = time;
+        return;
+      }
+
+      if (!lastTimeRef.current) lastTimeRef.current = time;
+      const elapsed = time - lastTimeRef.current;
+      lastTimeRef.current = time;
+
+      setProgress((prev) => {
+        const newProgress = prev + elapsed / duration;
+        return newProgress;
+      });
+
+      const translateY = (progress % 1) * 50;
+      stack.style.transform = `translateY(-${translateY}%)`;
+
+      animationFrame = requestAnimationFrame(animate);
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [isPaused, progress]);
+
   return (
-    <Stack
-      sx={{
-        flexDirection: 'column',
-        alignSelf: 'center',
-        gap: 4,
-        maxWidth: 450,
-      }}
-    >
+    <Stack sx={{ alignItems: 'center', gap: 2 }}>
       <Box
         sx={{
           display: { xs: 'none', md: 'flex' },
           alignItems: 'flex-end',
-          // justifyContent: 'center',
           columnGap: '4px',
           marginBottom: '12px',
         }}
@@ -77,19 +106,46 @@ export default function Content() {
           </Typography>
         </NavLink>
       </Box>
-      {items.map((item, index) => (
-        <Stack key={index} direction="row" sx={{ gap: 2 }}>
-          {item.icon}
-          <div>
-            <Typography gutterBottom sx={{ fontWeight: 'medium' }}>
-              {item.title}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {item.description}
-            </Typography>
-          </div>
+      <Box
+        sx={{
+          height: 400,
+          overflow: 'hidden',
+          maxWidth: 450,
+          alignSelf: 'center',
+          position: 'relative',
+          padding: 2,
+        }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => {
+          setIsPaused(false);
+          lastTimeRef.current = null;
+        }}
+      >
+        <Stack
+          ref={stackRef}
+          sx={{
+            flexDirection: 'column',
+            gap: 4,
+            width: '100%',
+            willChange: 'transform',
+            minHeight: '200%',
+          }}
+        >
+          {[...items, ...items, ...items].map((item, index) => (
+            <Stack key={index} direction="row" sx={{ gap: 2, minHeight: 80 }}>
+              {item.icon}
+              <div>
+                <Typography gutterBottom sx={{ fontWeight: 'medium' }}>
+                  {item.title}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {item.description}
+                </Typography>
+              </div>
+            </Stack>
+          ))}
         </Stack>
-      ))}
+      </Box>
     </Stack>
   );
 }
