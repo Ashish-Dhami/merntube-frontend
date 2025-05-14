@@ -181,6 +181,42 @@ export const forgetMe = createAsyncThunk('forgetMe', async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(err?.response?.data?.message);
   }
 });
+export const forgotPassword = createAsyncThunk(
+  'forgotPassword',
+  async (email, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post('/users/forgot-password', {
+        email,
+      });
+      return response.data.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err?.response?.data?.message);
+    }
+  }
+);
+export const verifyResetToken = createAsyncThunk(
+  'verifyResetToken',
+  async (token) => {
+    const response = await axiosInstance.get(
+      `/users/verify-reset-token/${token}`
+    );
+    return response.data;
+  }
+);
+export const resetPassword = createAsyncThunk(
+  'resetPassword',
+  async ({ token, newPassword }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/users/reset-password/${token}`,
+        { newPassword }
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data?.message);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',

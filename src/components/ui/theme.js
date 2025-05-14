@@ -7,6 +7,7 @@ const theme = createTheme({
   breakpoints: {
     values: {
       break1: 384, // Custom breakpoint at 384px
+      sm: 600,
     },
   },
   components: {

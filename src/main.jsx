@@ -19,6 +19,7 @@ import {
   ProfileDashboard,
   VideoCreate,
   TweetCreate,
+  ResetPassword,
 } from './pages';
 import {
   Login,
@@ -152,6 +153,13 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <Signup />,
+  },
+  {
+    path: '/reset-password',
+    children: [
+      { index: true, element: <ResetPassword /> },
+      { path: ':token', element: <ResetPassword /> },
+    ],
   },
   {
     path: '*',

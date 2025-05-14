@@ -416,7 +416,6 @@ export default function SignInCard() {
                   label="Remember me"
                   disabled={loading}
                 />
-                <ForgotPassword open={open} handleClose={handleClose} />
                 <Button
                   type="submit"
                   fullWidth
@@ -450,6 +449,7 @@ export default function SignInCard() {
                   </span>
                 </Typography>
               </Box>
+              <ForgotPassword open={open} handleClose={handleClose} />
               <Divider>or</Divider>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button

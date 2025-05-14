@@ -8,6 +8,7 @@ import ErrorPage from './ErrorPage';
 import ProfileDashboard from './ProfileDashboard';
 import VideoCreate from './VideoCreate';
 import TweetCreate from './TweetCreate';
+import ResetPassword from './ResetPassword';
 export {
   HomePage,
   VideoPage,
@@ -19,4 +20,5 @@ export {
   ProfileDashboard,
   VideoCreate,
   TweetCreate,
+  ResetPassword,
 };
