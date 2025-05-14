@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createTweet } from '../store/Slices/tweetSlice';
 import { useEffect, useRef, useState } from 'react';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const TweetCreate = () => {
   const {
@@ -26,6 +27,7 @@ const TweetCreate = () => {
       content: '',
     },
   });
+  useDocumentTitle(`New Tweet - MERNTube`);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.tweet);
   const [uploaded, setUploaded] = useState(false);

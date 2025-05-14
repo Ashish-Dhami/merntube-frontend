@@ -8,8 +8,10 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from '../icons';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function LikedVideosPaginated() {
+  useDocumentTitle(`Liked Videos - MERNTube`);
   const dispatch = useDispatch();
   const { loading, likedVideos, likedVideosTotal } = useSelector(
     (state) => state.like

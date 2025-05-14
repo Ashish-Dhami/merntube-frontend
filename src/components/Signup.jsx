@@ -18,8 +18,10 @@ import {
   Typography,
 } from '@mui/material';
 import EastIcon from '@mui/icons-material/East';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function Signup() {
+  useDocumentTitle(`Sign up - MERNTube`);
   const dispatch = useDispatch();
   const {
     register,

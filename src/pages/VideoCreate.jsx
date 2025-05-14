@@ -16,6 +16,7 @@ import { publishAVideo, resetStateOnUnmount } from '../store/Slices/videoSlice';
 import { useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiHappyBeaming } from '../icons';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const VideoCreate = () => {
   const {
@@ -34,6 +35,7 @@ const VideoCreate = () => {
       thumbnail: null,
     },
   });
+  useDocumentTitle(`New Video - MERNTube`);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const uploading = useSelector((state) => state.video.uploading);

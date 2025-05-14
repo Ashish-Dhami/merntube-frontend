@@ -4,8 +4,10 @@ import { NavLink, Outlet } from 'react-router-dom';
 import SortBy from '../enums/SortBy';
 import { makeVideosNull } from '../store/Slices/videoSlice';
 import { resetTweets } from '../store/Slices/tweetSlice';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function MyContent() {
+  useDocumentTitle(`My Content - MERNTube`);
   const totalVideos = useSelector((state) => state.video.totalVideos);
   const totalTweets = useSelector((state) => state.tweet.totalTweets);
   const dispatch = useDispatch();

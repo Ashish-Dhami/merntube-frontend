@@ -14,8 +14,10 @@ import {
   updateAccountDetails,
   updateUserAvatar,
 } from '../store/Slices/userSlice';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function ProfileDashboard() {
+  useDocumentTitle(`My Account - MERNTube`);
   const dispatch = useDispatch();
 
   const channelStats = useSelector((state) => state.dashboard.channelStats);

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { getVideoById, makeVideoNull } from '../store/Slices/videoSlice';
 import { toast } from 'react-toastify';
 import { Alert, AlertTitle } from '@mui/material';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function VideoPage() {
   const { videoId } = useParams();
@@ -12,6 +13,7 @@ export default function VideoPage() {
   const navigate = useNavigate();
 
   const video = useSelector((state) => state.video.video);
+  useDocumentTitle(`${video?.title} - MERNTube`);
   const loading = useSelector((state) => state.video.loading);
 
   useEffect(() => {

@@ -16,8 +16,10 @@ import { Container, BackGround } from '../components';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { resetPassword, verifyResetToken } from '../store/Slices/userSlice';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function ResetPassword() {
+  useDocumentTitle(`Change Password - MERNTube`);
   const { token } = useParams();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');

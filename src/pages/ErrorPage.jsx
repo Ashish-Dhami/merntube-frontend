@@ -1,7 +1,9 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 function ErrorPage() {
+  useDocumentTitle(`404 Not Found`);
   return (
     <main className="fixed inset-0 z-1000 flex h-screen w-full flex-col items-center justify-center bg-[#1A2238] select-none">
       <h1 className="text-9xl font-extrabold tracking-widest text-white">

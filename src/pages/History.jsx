@@ -7,8 +7,10 @@ import {
   VideoShareModal,
   VideoDeleted,
 } from '../components';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function History() {
+  useDocumentTitle(`Watch History - MERNTube`);
   const dispatch = useDispatch();
   const watchHistoryData = useSelector((state) => state.user.watchHistory);
   const loading = useSelector((state) => state.user.loading);

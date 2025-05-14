@@ -21,9 +21,9 @@ import { resetTweets } from '../store/Slices/tweetSlice';
 export default function UserChannelPage() {
   const { username: routedUname } = useParams();
   const username = routedUname.substring(1).trim();
-  useDocumentTitle(`${username} - MERNTube`);
 
   const userProfileData = useSelector((state) => state.user.userProfileData);
+  useDocumentTitle(`${userProfileData?.fullName || username} - MERNTube`);
   const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();

@@ -5,8 +5,10 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import SignInSide from './sign-in-side/SignInSide';
 import { Backdrop, LinearProgress } from '@mui/material';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 export default function Login() {
+  useDocumentTitle(`Sign in - MERNTube`);
   const navigate = useNavigate();
   const { loading, authStatus } = useSelector((state) => state.user);
 
