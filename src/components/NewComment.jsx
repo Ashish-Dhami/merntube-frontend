@@ -7,6 +7,8 @@ import {
   cleanupComments,
   getVideoComments,
 } from '../store/Slices/commentSlice';
+import { stringAvatar } from '../helpers/stringAvatar';
+import { Avatar } from '@mui/material';
 
 export default function NewComment({ videoId, setSortBy }) {
   const currentUser = useSelector((state) => state.user.userData);
@@ -36,10 +38,15 @@ export default function NewComment({ videoId, setSortBy }) {
   return (
     <form onSubmit={handleSubmit(submitComment)}>
       <div className="font-roboto my-5 flex items-center gap-x-3">
-        <img
+        <Avatar
           src={currentUser.avatar}
-          alt={currentUser.username.charAt(0).toUpperCase()}
-          className="h-10 w-10 shrink-0 rounded-full object-cover text-center leading-10 outline-1 outline-gray-500"
+          {...stringAvatar(currentUser.fullName)}
+          sx={{
+            ...stringAvatar(currentUser.fullName).sx,
+            height: '2.5rem',
+            width: '2.5rem',
+            flexShrink: 0,
+          }}
         />
         <Input
           placeholder="Add a comment..."

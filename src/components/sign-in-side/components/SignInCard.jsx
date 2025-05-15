@@ -38,6 +38,7 @@ import { useMaskedEmail } from '../../../hooks/useMaskedEmail';
 import { toast } from 'react-toastify';
 import { SigninSkeleton } from '../../../skeletons';
 import { Logo } from '../../';
+import { stringAvatar } from '../../../helpers/stringAvatar';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -219,8 +220,13 @@ export default function SignInCard() {
                   >
                     <Avatar
                       src={savedUser.avatar}
-                      alt={savedUser.fullName}
-                      sx={{ width: 44, height: 44, mr: 2 }}
+                      {...stringAvatar(savedUser.fullName)}
+                      sx={{
+                        ...stringAvatar(savedUser.fullName).sx,
+                        height: 44,
+                        width: 44,
+                        mr: 2,
+                      }}
                     />
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="subtitle2">

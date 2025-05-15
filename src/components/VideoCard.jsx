@@ -17,6 +17,8 @@ import { useDispatch } from 'react-redux';
 import { deleteVideo, togglePublishStatus } from '../store/Slices/videoSlice';
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import { stringAvatar } from '../helpers/stringAvatar';
+import { Avatar, IconButton } from '@mui/material';
 
 export default function VideoCard({
   title,
@@ -183,17 +185,28 @@ export default function VideoCard({
             onClick={() => navigate(`/watch/${id}`)}
           >
             {!layoutChange && (
-              <div id="publisher-image" className="shrink-0">
-                <img
+              <IconButton
+                size="small"
+                color="info"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/@${owner.username}`);
+                }}
+                sx={{
+                  alignSelf: 'flex-start',
+                  flexShrink: 0,
+                }}
+              >
+                <Avatar
                   src={owner.avatar}
-                  alt={owner.username.charAt(0).toUpperCase()}
-                  className="h-10 w-10 rounded-full object-cover text-center leading-10 outline-1 outline-gray-500"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/@${owner.username}`);
+                  {...stringAvatar(owner.fullName)}
+                  sx={{
+                    ...stringAvatar(owner.fullName).sx,
+                    height: '2.5rem',
+                    width: '2.5rem',
                   }}
                 />
-              </div>
+              </IconButton>
             )}
             <div className="relative grow text-sm">
               <p

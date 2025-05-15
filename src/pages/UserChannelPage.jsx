@@ -12,11 +12,13 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Input from '@mui/material/Input';
 import Divider from '@mui/material/Divider';
+import Avatar from '@mui/material/Avatar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SortBy from '../enums/SortBy';
 import { makeVideosNull } from '../store/Slices/videoSlice';
 import { resetTweets } from '../store/Slices/tweetSlice';
+import { stringAvatar } from '../helpers/stringAvatar';
 
 export default function UserChannelPage() {
   const { username: routedUname } = useParams();
@@ -104,10 +106,16 @@ export default function UserChannelPage() {
   ) : (
     <>
       <div id="channel-info" className="font-roboto flex gap-x-5">
-        <img
+        <Avatar
           src={userProfileData?.avatar}
-          alt={userProfileData?.username.charAt(0).toUpperCase()}
-          className="h-40 w-40 rounded-full object-cover text-center text-5xl leading-40 outline-1 outline-gray-600"
+          {...stringAvatar(userProfileData?.fullName)}
+          sx={{
+            ...stringAvatar(userProfileData?.fullName).sx,
+            height: '10rem',
+            width: '10rem',
+            fontSize: '3rem',
+            border: '1px solid #D4A017',
+          }}
         />
         <div className="flex grow flex-col items-start gap-y-1">
           <p className="text-4xl font-bold">{userProfileData?.fullName}</p>

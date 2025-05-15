@@ -122,6 +122,7 @@ const CommentsSection = memo(({ videoId }) => {
               key={comment?._id}
               id={comment?._id}
               username={comment?.commentedBy?.username}
+              fullName={comment?.commentedBy?.fullName}
               avatar={comment?.commentedBy?.avatar}
               comment={comment?.comment}
               createdAt={comment?.createdAt}

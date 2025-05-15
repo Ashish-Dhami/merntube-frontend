@@ -15,6 +15,8 @@ import { toggleSubscription } from '../store/Slices/subscriptionSlice';
 import { useState } from 'react';
 import { toggleVideoLike } from '../store/Slices/likeSlice';
 import { formatNumber } from '../helpers/formatNumber';
+import { stringAvatar } from '../helpers/stringAvatar';
+import { Avatar, IconButton } from '@mui/material';
 
 export default function Description({
   title,
@@ -79,14 +81,21 @@ export default function Description({
       </h1>
       <div id="details" className="font-roboto flex justify-between">
         <div id="owner" className="flex items-center gap-x-3">
-          <div id="publisher-image">
-            <img
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => navigate(`/@${owner?.username}`)}
+          >
+            <Avatar
               src={owner?.avatar}
-              alt={owner?.username.charAt(0).toUpperCase()}
-              className="h-10 w-10 cursor-pointer rounded-full object-cover text-center leading-10 outline-1 outline-gray-600"
-              onClick={() => navigate(`/@${owner?.username}`)}
+              {...stringAvatar(owner?.fullName)}
+              sx={{
+                ...stringAvatar(owner?.fullName).sx,
+                height: '2.5rem',
+                width: '2.5rem',
+              }}
             />
-          </div>
+          </IconButton>
           <div>
             <p
               className="tooltip tooltip-info cursor-pointer"

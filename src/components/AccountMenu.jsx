@@ -15,6 +15,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../store/Slices/userSlice';
+import { stringAvatar } from '../helpers/stringAvatar';
 
 function CustomPopoverContent({ userData, onSignOut, handleClose }) {
   const navigate = useNavigate();
@@ -25,7 +26,16 @@ function CustomPopoverContent({ userData, onSignOut, handleClose }) {
       sx={{ bgcolor: 'background.paper', borderRadius: 1.5 }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mx: 2, my: 1 }}>
-        <Avatar src={userData.avatar} sx={{ width: 48, height: 48, mr: 2 }} />
+        <Avatar
+          src={userData.avatar}
+          {...stringAvatar(userData.fullName)}
+          sx={{
+            ...stringAvatar(userData.fullName).sx,
+            width: 48,
+            height: 48,
+            mr: 2,
+          }}
+        />
         <Box>
           <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
             {userData.fullName}
@@ -92,8 +102,13 @@ function AccountMenu() {
         <IconButton size="small" onClick={handleOpen}>
           <Avatar
             src={userData.avatar}
-            alt={userData.fullName}
-            sx={{ width: 33, height: 33 }}
+            {...stringAvatar(userData.fullName)}
+            sx={{
+              ...stringAvatar(userData.fullName).sx,
+              width: 33,
+              height: 33,
+              fontSize: 'medium',
+            }}
           />
         </IconButton>
       </Tooltip>

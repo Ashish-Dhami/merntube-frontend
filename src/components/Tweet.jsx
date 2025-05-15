@@ -21,6 +21,7 @@ import { toggleTweetLike } from '../store/Slices/likeSlice';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { deleteTweet } from '../store/Slices/tweetSlice';
+import { stringAvatar } from '../helpers/stringAvatar';
 
 const Tweet = ({ tweet, setIsEditModalOpen, setTweetToEdit, allowCRUD }) => {
   const navigate = useNavigate();
@@ -98,11 +99,16 @@ const Tweet = ({ tweet, setIsEditModalOpen, setTweetToEdit, allowCRUD }) => {
           avatar={
             <Avatar
               src={tweet.owner.avatar}
-              alt={tweet.owner.username.charAt(0).toUpperCase()}
-              className="cursor-pointer !bg-red-500 outline-1 outline-gray-500"
               onClick={() =>
                 navigate(`/@${tweet.owner.username}`, { replace: true })
               }
+              {...stringAvatar(tweet.owner.fullName)}
+              sx={{
+                ...stringAvatar(tweet.owner.fullName).sx,
+                cursor: 'pointer',
+                height: '2.5rem',
+                width: '2.5rem',
+              }}
             />
           }
           action={

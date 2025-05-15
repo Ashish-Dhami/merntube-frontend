@@ -15,6 +15,8 @@ import {
   updateUserAvatar,
 } from '../store/Slices/userSlice';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import { Avatar } from '@mui/material';
+import { stringAvatar } from '../helpers/stringAvatar';
 
 export default function ProfileDashboard() {
   useDocumentTitle(`My Account - MERNTube`);
@@ -116,10 +118,19 @@ export default function ProfileDashboard() {
             <div className="flex-1">
               <div className="mb-6 flex justify-center">
                 <div className="relative">
-                  <img
+                  <Avatar
                     src={userData?.avatar}
-                    alt={userData?.username.charAt(0).toUpperCase()}
-                    className="h-36 w-36 rounded-full object-cover text-center text-4xl leading-36 outline-1 outline-cyan-700 hover:outline-white"
+                    {...stringAvatar(userData?.fullName)}
+                    sx={{
+                      ...stringAvatar(userData?.fullName).sx,
+                      height: '9rem',
+                      width: '9rem',
+                      fontSize: '2.25rem',
+                      border: '1px solid #D4A017',
+                      ':hover': {
+                        borderColor: 'white',
+                      },
+                    }}
                   />
                   <RiImageEditLine
                     data-tooltip-id="change-avatar"

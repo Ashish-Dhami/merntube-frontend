@@ -18,10 +18,13 @@ import { updateComment, deleteComment } from '../store/Slices/commentSlice';
 import { toast } from 'react-toastify';
 import '../assets/react-toastify.css';
 import { formatNumber } from '../helpers/formatNumber';
+import { Avatar, IconButton } from '@mui/material';
+import { stringAvatar } from '../helpers/stringAvatar';
 
 export default function CommentList({
   id,
   username,
+  fullName,
   avatar,
   comment,
   createdAt,
@@ -146,13 +149,22 @@ export default function CommentList({
   return (
     !isDeleted && (
       <div className="font-roboto my-4 flex gap-x-3 p-1 pb-4">
-        <img
-          id="comment-owner"
-          src={avatar}
-          alt={username?.charAt(0)?.toUpperCase()}
-          className="h-10 w-10 shrink-0 cursor-pointer rounded-full object-cover text-center leading-10 outline-1 outline-gray-500"
+        <IconButton
+          size="small"
+          color="info"
           onClick={() => navigate(`/@${username}`)}
-        />
+          sx={{ alignSelf: 'flex-start', flexShrink: 0 }}
+        >
+          <Avatar
+            src={avatar}
+            {...stringAvatar(fullName)}
+            sx={{
+              ...stringAvatar(fullName).sx,
+              height: '2.5rem',
+              width: '2.5rem',
+            }}
+          />
+        </IconButton>
         <div id="comment" className="flex grow-1 flex-col">
           <p className="shrink-0">
             @
