@@ -23,7 +23,7 @@ export default function ProfileDashboard() {
   const dispatch = useDispatch();
 
   const channelStats = useSelector((state) => state.dashboard.channelStats);
-  const userData = useSelector((state) => state.user.userData);
+  const { userData } = useSelector((state) => state.user);
 
   const [editable, setEditable] = useState(false);
   const [fullName, setFullName] = useState(userData?.fullName || '');
@@ -53,6 +53,11 @@ export default function ProfileDashboard() {
     }
   };
 
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
   const handleUpdate = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (editable) {
@@ -68,16 +73,34 @@ export default function ProfileDashboard() {
         setError({ email: 'Invalid email !' });
         return;
       }
-      dispatch(updateAccountDetails({ fullName, email })).then((res) => {
+      const fullNameParsed = capitalizeFirstLetter(fullName.split(' ')[0])
+        .concat(` ${capitalizeFirstLetter(fullName.split(' ')[1])}`)
+        .trim();
+      const emailParsed = email.toLowerCase().trim();
+
+      const isFullnameSame = fullNameParsed === userData.fullName.trim();
+      const isEmailSame = emailParsed === userData.email.trim();
+      if (isFullnameSame && isEmailSame) {
+        const errMsg = 'Modify atleast one field !!';
+        setError({ email: errMsg, fullName: errMsg });
+        return;
+      }
+      dispatch(
+        updateAccountDetails({
+          email: isEmailSame ? null : emailParsed,
+          fullName: isFullnameSame ? null : fullNameParsed,
+        })
+      ).then((res) => {
         if (res.error) resetFields();
+        else resetFields(res.payload);
       });
     }
     setEditable((prev) => !prev);
   };
 
-  const resetFields = () => {
-    setFullName(userData?.fullName || '');
-    setEmail(userData?.email || '');
+  const resetFields = (updatedUserData) => {
+    setFullName(updatedUserData?.fullName || userData?.fullName || '');
+    setEmail(updatedUserData?.email || userData?.email || '');
     setError(null);
   };
 
@@ -163,9 +186,7 @@ export default function ProfileDashboard() {
                   disabled={!editable}
                 />
                 {error?.fullName && (
-                  <p className="p-1 text-sm font-medium text-red-600">
-                    {error?.fullName}
-                  </p>
+                  <p className="p-1 text-sm text-red-600">{error?.fullName}</p>
                 )}
               </div>
               <div className="mb-1 min-h-24">
@@ -183,9 +204,7 @@ export default function ProfileDashboard() {
                   disabled={!editable}
                 />
                 {error?.email && (
-                  <p className="p-1 text-sm font-medium text-red-600">
-                    {error?.email}
-                  </p>
+                  <p className="p-1 text-sm text-red-600">{error?.email}</p>
                 )}
               </div>
               <div className="relative mb-4">
